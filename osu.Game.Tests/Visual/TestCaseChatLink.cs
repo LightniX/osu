@@ -56,7 +56,7 @@ namespace osu.Game.Tests.Visual
 
             var chatManager = new ChannelManager();
             BindableList<Channel> availableChannels = (BindableList<Channel>)chatManager.AvailableChannels;
-            availableChannels.Add(new Channel { Name = "#english"});
+            availableChannels.Add(new Channel { Name = "#english" });
             availableChannels.Add(new Channel { Name = "#japanese" });
             Dependencies.Cache(chatManager);
 
@@ -159,7 +159,7 @@ namespace osu.Game.Tests.Visual
                     Scheduler.AddDelayed(() => newLine.Message = new DummyMessage(completeText ?? text), delay);
                 });
 
-                AddUntilStep(() => textContainer.All(line => line.Message is DummyMessage), $"wait for msg #{echoCounter}");
+                AddUntilStep($"wait for msg #{echoCounter}", () => textContainer.All(line => line.Message is DummyMessage));
             }
         }
 

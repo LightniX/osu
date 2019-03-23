@@ -27,9 +27,10 @@ namespace osu.Game.Screens.Play
 
         public bool IsCounting { get; set; } = true;
         private int countPresses;
+
         public int CountPresses
         {
-            get { return countPresses; }
+            get => countPresses;
             private set
             {
                 if (countPresses != value)
@@ -41,9 +42,10 @@ namespace osu.Game.Screens.Play
         }
 
         private bool isLit;
+
         public bool IsLit
         {
-            get { return isLit; }
+            get => isLit;
             protected set
             {
                 if (isLit != value)
@@ -69,9 +71,12 @@ namespace osu.Game.Screens.Play
             Name = name;
         }
 
-        [BackgroundDependencyLoader]
-        private void load(TextureStore textures)
+        [BackgroundDependencyLoader(true)]
+        private void load(TextureStore textures, GameplayClock clock)
         {
+            if (clock != null)
+                Clock = clock;
+
             Children = new Drawable[]
             {
                 buttonSprite = new Sprite

@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables.Pieces
         /// </summary>
         public Color4 AccentColour
         {
-            get { return accentColour; }
+            get => accentColour;
             set
             {
                 accentColour = value;
@@ -132,15 +132,22 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables.Pieces
             base.ClearTransformsAfter(time, false, targetMember);
         }
 
+        public override void ApplyTransformsAt(double time, bool propagateChildren = false)
+        {
+            // For the same reasons as above w.r.t rewinding, we shouldn't propagate to children here either.
+            base.ApplyTransformsAt(time, false);
+        }
+
         private bool tracking;
 
         public bool Tracking
         {
-            get { return tracking; }
+            get => tracking;
             private set
             {
                 if (value == tracking)
                     return;
+
                 tracking = value;
 
                 FollowCircle.ScaleTo(tracking ? 2f : 1, 300, Easing.OutQuint);

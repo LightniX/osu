@@ -97,7 +97,7 @@ namespace osu.Game.Screens.Menu
         private OsuGame game { get; set; }
 
         [Resolved]
-        private APIAccess api { get; set; }
+        private IAPIProvider api { get; set; }
 
         [Resolved(CanBeNull = true)]
         private NotificationOverlay notifications { get; set; }
@@ -206,7 +206,7 @@ namespace osu.Game.Screens.Menu
 
         public ButtonSystemState State
         {
-            get { return state; }
+            get => state;
 
             set
             {

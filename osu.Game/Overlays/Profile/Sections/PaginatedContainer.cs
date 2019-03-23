@@ -28,7 +28,7 @@ namespace osu.Game.Overlays.Profile.Sections
 
         protected readonly Bindable<User> User = new Bindable<User>();
 
-        protected APIAccess Api;
+        protected IAPIProvider Api;
         protected APIRequest RetrievalRequest;
         protected RulesetStore Rulesets;
 
@@ -65,7 +65,7 @@ namespace osu.Game.Overlays.Profile.Sections
                     {
                         Font = OsuFont.GetFont(size: 14),
                         Text = "show more",
-                        Padding = new MarginPadding {Vertical = 10, Horizontal = 15 },
+                        Padding = new MarginPadding { Vertical = 10, Horizontal = 15 },
                     }
                 },
                 ShowMoreLoading = new LoadingAnimation
@@ -84,7 +84,7 @@ namespace osu.Game.Overlays.Profile.Sections
         }
 
         [BackgroundDependencyLoader]
-        private void load(APIAccess api, RulesetStore rulesets)
+        private void load(IAPIProvider api, RulesetStore rulesets)
         {
             Api = api;
             Rulesets = rulesets;

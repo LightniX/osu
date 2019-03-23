@@ -15,7 +15,6 @@ using osu.Game.Input.Handlers;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Mania.Beatmaps;
 using osu.Game.Rulesets.Mania.Configuration;
-using osu.Game.Rulesets.Mania.Mods;
 using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mania.Objects.Drawables;
 using osu.Game.Rulesets.Mania.Replays;
@@ -29,17 +28,19 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Mania.UI
 {
-    public class ManiaRulesetContainer : ScrollingRulesetContainer<ManiaPlayfield, ManiaHitObject>
+    public class DrawableManiaRuleset : DrawableScrollingRuleset<ManiaHitObject>
     {
+        protected new ManiaPlayfield Playfield => (ManiaPlayfield)base.Playfield;
+
         public new ManiaBeatmap Beatmap => (ManiaBeatmap)base.Beatmap;
 
         public IEnumerable<BarLine> BarLines;
 
-        protected new ManiaConfigManager Config => (ManiaConfigManager)base.Config;
+        protected new ManiaRulesetConfigManager Config => (ManiaRulesetConfigManager)base.Config;
 
         private readonly Bindable<ManiaScrollingDirection> configDirection = new Bindable<ManiaScrollingDirection>();
 
-        public ManiaRulesetContainer(Ruleset ruleset, WorkingBeatmap beatmap)
+        public DrawableManiaRuleset(Ruleset ruleset, WorkingBeatmap beatmap)
             : base(ruleset, beatmap)
         {
             // Generate the bar lines
@@ -75,10 +76,10 @@ namespace osu.Game.Rulesets.Mania.UI
         {
             BarLines.ForEach(Playfield.Add);
 
-            Config.BindWith(ManiaSetting.ScrollDirection, configDirection);
+            Config.BindWith(ManiaRulesetSetting.ScrollDirection, configDirection);
             configDirection.BindValueChanged(direction => Direction.Value = (ScrollingDirection)direction.NewValue, true);
 
-            Config.BindWith(ManiaSetting.ScrollTime, TimeRange);
+            Config.BindWith(ManiaRulesetSetting.ScrollTime, TimeRange);
         }
 
         /// <summary>
@@ -96,9 +97,9 @@ namespace osu.Game.Rulesets.Mania.UI
 
         public override ScoreProcessor CreateScoreProcessor() => new ManiaScoreProcessor(this);
 
-        public override int Variant => (int)(Mods.OfType<IPlayfieldTypeMod>().FirstOrDefault()?.PlayfieldType ?? PlayfieldType.Single) + Beatmap.TotalColumns;
+        public override int Variant => (int)(Beatmap.Stages.Count == 1 ? PlayfieldType.Single : PlayfieldType.Dual) + Beatmap.TotalColumns;
 
-        public override PassThroughInputManager CreateInputManager() => new ManiaInputManager(Ruleset.RulesetInfo, Variant);
+        protected override PassThroughInputManager CreateInputManager() => new ManiaInputManager(Ruleset.RulesetInfo, Variant);
 
         public override DrawableHitObject<ManiaHitObject> GetVisualRepresentation(ManiaHitObject h)
         {

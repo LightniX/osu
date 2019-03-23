@@ -29,6 +29,7 @@ namespace osu.Game.Overlays.MedalSplash
         private readonly OsuSpriteText unlocked, name;
         private readonly TextFlowContainer description;
         private DisplayState state;
+
         public DrawableMedal(Medal medal)
         {
             this.medal = medal;
@@ -108,7 +109,7 @@ namespace osu.Game.Overlays.MedalSplash
                 s.Font = s.Font.With(size: 16);
             });
 
-            medalContainer.OnLoadComplete = d =>
+            medalContainer.OnLoadComplete += d =>
             {
                 unlocked.Position = new Vector2(0f, medalContainer.DrawSize.Y / 2 + 10);
                 infoFlow.Position = new Vector2(0f, unlocked.Position.Y + 90);
@@ -132,7 +133,7 @@ namespace osu.Game.Overlays.MedalSplash
 
         public DisplayState State
         {
-            get { return state; }
+            get => state;
             set
             {
                 if (state == value) return;

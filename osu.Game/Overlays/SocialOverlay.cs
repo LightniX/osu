@@ -22,7 +22,7 @@ namespace osu.Game.Overlays
 {
     public class SocialOverlay : SearchableListOverlay<SocialTab, SocialSortCriteria, SortDirection>, IOnlineComponent
     {
-        private APIAccess api;
+        private IAPIProvider api;
         private readonly LoadingAnimation loading;
         private FillFlowContainer<SocialPanel> panels;
 
@@ -34,9 +34,10 @@ namespace osu.Game.Overlays
         protected override SearchableListFilterControl<SocialSortCriteria, SortDirection> CreateFilterControl() => new FilterControl();
 
         private IEnumerable<User> users;
+
         public IEnumerable<User> Users
         {
-            get { return users; }
+            get => users;
             set
             {
                 if (users?.Equals(value) ?? false)
@@ -88,7 +89,7 @@ namespace osu.Game.Overlays
         }
 
         [BackgroundDependencyLoader]
-        private void load(APIAccess api)
+        private void load(IAPIProvider api)
         {
             this.api = api;
             api.Register(this);
@@ -123,6 +124,7 @@ namespace osu.Game.Overlays
                             panel = new SocialListPanel(u);
                             break;
                     }
+
                     panel.Status.BindTo(u.Status);
                     return panel;
                 })
@@ -130,7 +132,7 @@ namespace osu.Game.Overlays
 
             LoadComponentAsync(newPanels, f =>
             {
-                if(panels != null)
+                if (panels != null)
                     ScrollFlow.Remove(panels);
 
                 ScrollFlow.Add(panels = newPanels);
@@ -171,6 +173,7 @@ namespace osu.Game.Overlays
                     api.Queue(getUsersRequest = userRequest);
                     break;
             }
+
             loading.Show();
         }
 
@@ -190,7 +193,7 @@ namespace osu.Game.Overlays
             }
         }
 
-        public void APIStateChanged(APIAccess api, APIState state)
+        public void APIStateChanged(IAPIProvider api, APIState state)
         {
             switch (state)
             {

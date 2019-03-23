@@ -23,7 +23,7 @@ namespace osu.Game.Users
 
         public User User
         {
-            get { return user; }
+            get => user;
             set
             {
                 if (user?.Id == value?.Id)
@@ -57,9 +57,9 @@ namespace osu.Game.Users
                 var avatar = new Avatar(user)
                 {
                     RelativeSizeAxes = Axes.Both,
-                    OnLoadComplete = d => d.FadeInFromZero(300, Easing.OutQuint),
                 };
 
+                avatar.OnLoadComplete += d => d.FadeInFromZero(300, Easing.OutQuint);
                 avatar.OpenOnClick.BindTo(OpenOnClick);
 
                 Add(displayedAvatar = new DelayedLoadWrapper(avatar));

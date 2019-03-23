@@ -19,6 +19,7 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Profile.Components;
 using osu.Game.Overlays.Profile.Header;
 using osu.Game.Users;
+using Humanizer;
 
 namespace osu.Game.Overlays.Profile
 {
@@ -318,7 +319,7 @@ namespace osu.Game.Overlays.Profile
 
         public User User
         {
-            get { return user; }
+            get => user;
             set
             {
                 user = value;
@@ -334,9 +335,12 @@ namespace osu.Game.Overlays.Profile
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 FillMode = FillMode.Fill,
-                OnLoadComplete = d => d.FadeInFromZero(200),
                 Depth = float.MaxValue,
-            }, coverContainer.Add);
+            }, background =>
+            {
+                coverContainer.Add(background);
+                background.FadeInFromZero(200);
+            });
 
             if (user.IsSupporter)
                 SupporterTag.Show();
@@ -401,7 +405,7 @@ namespace osu.Game.Overlays.Profile
 
             infoTextLeft.NewLine();
             infoTextLeft.AddText("Contributed ", lightText);
-            infoTextLeft.AddLink($@"{user.PostCount} forum posts", url: $"https://osu.ppy.sh/users/{user.Id}/posts", creationParameters: boldItalic);
+            infoTextLeft.AddLink("forum post".ToQuantity(user.PostCount), url: $"https://osu.ppy.sh/users/{user.Id}/posts", creationParameters: boldItalic);
 
             string websiteWithoutProtcol = user.Website;
             if (!string.IsNullOrEmpty(websiteWithoutProtcol))

@@ -39,6 +39,7 @@ namespace osu.Game.Screens.Multi.Match.Components
         private void load()
         {
             beatmaps.ItemAdded += beatmapAdded;
+            beatmaps.ItemRemoved += beatmapRemoved;
 
             Beatmap.BindValueChanged(b => updateBeatmap(b.NewValue), true);
         }
@@ -53,13 +54,22 @@ namespace osu.Game.Screens.Multi.Match.Components
             hasBeatmap = beatmaps.QueryBeatmap(b => b.OnlineBeatmapID == beatmap.OnlineBeatmapID) != null;
         }
 
-        private void beatmapAdded(BeatmapSetInfo model, bool existing, bool silent)
+        private void beatmapAdded(BeatmapSetInfo model, bool existing)
         {
             if (Beatmap.Value == null)
                 return;
 
             if (model.Beatmaps.Any(b => b.OnlineBeatmapID == Beatmap.Value.OnlineBeatmapID))
                 Schedule(() => hasBeatmap = true);
+        }
+
+        private void beatmapRemoved(BeatmapSetInfo model)
+        {
+            if (Beatmap.Value == null)
+                return;
+
+            if (model.OnlineBeatmapSetID == Beatmap.Value.BeatmapSet.OnlineBeatmapSetID)
+                Schedule(() => hasBeatmap = false);
         }
 
         protected override void Update()
